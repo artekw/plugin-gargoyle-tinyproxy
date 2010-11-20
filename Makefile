@@ -3,6 +3,8 @@
 #
 # This is free software, licensed under the GNU General Public License v2.
 # See /LICENSE for more information.
+#
+# $Id: Makefile 9349 2007-10-18 18:46:37Z blogic $
 
 include $(TOPDIR)/rules.mk
 
@@ -18,13 +20,13 @@ PKG_BUILD_DIR:=$(BUILD_DIR)/$(PKG_NAME)-$(PKG_VERSION)
 
 include $(INCLUDE_DIR)/package.mk
 
-define Package/plugin-gargoyle-usb-storage
+define Package/plugin-gargoyle-tinyproxy
 	SECTION:=admin
 	CATEGORY:=Administration
 	SUBMENU:=Gargoyle Web Interface
 	TITLE:=Tinyproxy for Gargoyle
 	DEPENDS:=+tinyproxy
-	MAINTAINER:=Artur Wronowski <arteqw@gmail.com>
+	MAINTAINER:=Artur Wronowski
 endef
 
 define Package/plugin-gargoyle-tinyproxy/description
