@@ -25,7 +25,7 @@ define Package/plugin-gargoyle-tinyproxy
 	CATEGORY:=Administration
 	SUBMENU:=Gargoyle Web Interface
 	TITLE:=Tinyproxy for Gargoyle
-	DEPENDS:=+tinyproxy
+	DEPENDS:=+tinyproxy +gargoyle
 	MAINTAINER:=Artur Wronowski
 endef
 
