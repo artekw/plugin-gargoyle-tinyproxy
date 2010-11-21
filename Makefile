@@ -27,6 +27,7 @@ define Package/plugin-gargoyle-tinyproxy
 	TITLE:=Tinyproxy for Gargoyle
 	DEPENDS:=+tinyproxy +gargoyle
 	MAINTAINER:=Artur Wronowski
+	PKGARCH:=all
 endef
 
 define Package/plugin-gargoyle-tinyproxy/description
