@@ -1,9 +1,5 @@
 /*	
- * This program is copyright © 2010 Artur Wronowski <arteqw@gmail.com> and is distributed under the terms of the GNU GPL 
- * version 2.0 with a special clarification/exception that permits adapting the program to 
- * configure proprietary "back end" software provided that all modifications to the web interface
- * itself remain covered by the GPL. 
- * See http://gargoyle-router.com/faq.html#qfoss for more information
+ * Copyright (c) 2010 Artur Wronowski <arteqw@gmail.com>
  */
 
 function saveChanges()
@@ -11,6 +7,7 @@ function saveChanges()
 	var enabled = getSelectedValue("tinyproxy_enabled");
 	var loglevel = getSelectedValue("tinyproxy_loglevel");
 	var tinyproxyPort = document.getElementById("tinyproxy_port").value;
+	var allowips = document.getElementById("tinyproxy_allowips").value;
 	
 	var errors = [];
 	if (tinyproxyPort == "")
@@ -29,8 +26,11 @@ function saveChanges()
 	
 	var preCommands = [];
 	
+	preCommands.push("uci set tinyproxy.@tinyproxy[0].Listen=0.0.0.0");
+
 	preCommands.push("uci set tinyproxy.@tinyproxy[0].Port='" + tinyproxyPort + "'");
 	preCommands.push("uci set tinyproxy.@tinyproxy[0].LogLevel='" + loglevel + "'");
+	preCommands.push("uci set tinyproxy.@tinyproxy[0].Allow='" + allowips + "'");
 
 	var postCommands = [];
 
@@ -74,15 +74,19 @@ function resetData()
 {
 	var tpSections = uciOriginal.getAllSectionsOfType("tinyproxy", "tinyproxy");
 
-	var enabled = uciOriginal.get("tinyproxy", tpSections[0], "Enable");
+	var enabled = uciOriginal.get("tinyproxy", tpSections[0], "enable");
 	setSelectedValue("tinyproxy_enabled", enabled);
 
-	var loglevel = uciOriginal.get("tinyproxy", tpSections[0], "LogLevel");
-	setSelectedValue("tinyproxy_loglevel", loglevel);
+//	var loglevel = uciOriginal.get("tinyproxy", tpSections[0], "LogLevel");
+//	setSelectedValue("tinyproxy_loglevel", loglevel);
+
+//	var allowips = uciOriginal.get("tinyproxy", tpSections[0], "Allow");
+//      setSelectedValue("tinyproxy_allowips", allowips);
 		
 	document.getElementById("tinyproxy_port").value = uciOriginal.get("tinyproxy", tpSections[0], "Port");
 	document.getElementById("tinyproxy_loglevel").value = uciOriginal.get("tinyproxy", tpSections[0], "LogLevel");
-	
+	document.getElementById("tinyproxy_allowips").value = uciOriginal.get("tinyproxy", tpSections[0], "Allow");	
+
 	setVisibility();
 
 }

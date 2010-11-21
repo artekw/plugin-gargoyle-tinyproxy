@@ -1,13 +1,8 @@
 #!/usr/bin/haserl
 <?
-	# This program is copyright © 2010 Artur Wronowski <arteqw@gmail.com> and is distributed under the terms of the GNU GPL 
-	# version 2.0 with a special clarification/exception that permits adapting the program to 
-	# configure proprietary "back end" software provided that all modifications to the web interface
-	# itself remain covered by the GPL. 
-	# See http://gargoyle-router.com/faq.html#qfoss for more information
+	# Copyright (c)  2010 Artur Wronowski <arteqw@gmail.com> 
 	eval $( gargoyle_session_validator -c "$COOKIE_hash" -e "$COOKIE_exp" -a "$HTTP_USER_AGENT" -i "$REMOTE_ADDR" -r "login.sh" -t $(uci get gargoyle.global.session_timeout) -b "$COOKIE_browser_time"  )
-	gargoyle_header_footer -h -s "system" -p "tinyproxy" -c "internal.css" -j "tinyproxy.js" tinyproxy
-
+	gargoyle_header_footer -h -s "connection" -p "tinyproxy" -c "internal.css" -j "tinyproxy.js" tinyproxy
 ?>
 
 <script>
@@ -42,12 +37,12 @@
 			<label id="tinyproxy_port_label" class="leftcolumn" for="tinyproxy_port">Proxy port:</label>
                 	<input id="tinyproxy_port" class="rightcolumn" type=text" size='5'/>
 		</div>
-<!--
-		<div id='tinyproxy_allow_access_container'>
-                        <label id="tinyproxy_allowaccess_label" class="leftcolumn" for="tinyproxy_port">Allow access from:</label>
-                        <input id="tinyproxy_allowaccess" class="rightcolumn" type=text" size='5'/>
+
+                <div id='tinyproxy_allowips_container'>
+                        <label id="tinyproxy_allowips_label" class="leftcolumn" for="tinyproxy_allowips">Allow IPs:</label>
+                        <input id="tinyproxy_allowips" class="rightcolumn" type=text" size='17'/>
                 </div>
--->
+
 		<div id='tinyproxy_loglevel_container'>
                         <label id="tinyproxy_loglevel_label" class="leftcolumn" for="tinyproxy_port">Log level:</label>
                         <select class="rightcolumn" id="tinyproxy_loglevel">
@@ -82,5 +77,5 @@
 
 
 <?
-	gargoyle_header_footer -f -s "system" -p "tinyproxy"
+	gargoyle_header_footer -f -s "connection" -p "tinyproxy"
 ?>
