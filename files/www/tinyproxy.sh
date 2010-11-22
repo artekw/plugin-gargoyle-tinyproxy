@@ -8,7 +8,13 @@
 <script>
 <!--
 <?
-	
+
+   echo "var filterurl_file = new Array();"
+   if [ -e /etc/tinyproxy/filter ]; then 
+      cat /etc/tinyproxy/filter | awk '{print "filterurl_file.push([\""$1"\"]);"};'
+  fi	
+
+
 ?>
 //-->
 </script>
@@ -17,13 +23,43 @@
 	<legend class="sectionheader">Tinyproxy</legend>
 		<div id='tinyproxy_enabled_container' class='rightcolumn'>
 		<label id='tinyproxy_enabled_label' class='leftcolumn'>Tinyproxy</label>
-			<select class="rightcolumn" id="tinyproxy_enabled" onchange="setVisibility()">
+			<select class="rightcolumn" id="tinyproxy_enabled" onchange="setVisibilityTinyproxy()">
 				<option value="1">Enabled</option>
 				<option value="0">Disabled</option>
 			</select>
 		</div>
 
 	<div id="tinyproxy_container">
+                <div id='tinyproxy_filterurl_container' class='rightcolumn'>
+                <label id='tinyproxy_filterurl_label' class='leftcolumn'>Filter URL</label>
+                        <select class="rightcolumn" id="tinyproxy_filterurl" onchange="setVisibilityFilterURL()">
+                                <option value="On">Enabled</option>
+                                <option value="Off">Disabled</option>
+                        </select>
+                </div>
+		
+		<div id='tinyproxy_filterurledit_container'>
+                        <label id="tinyproxy_filterurledit_label" class="leftcolumn" for="tinyproxy_filterurledit">Filter URL Content:</label>
+                        <textarea id="tinyproxy_filterurledit" class="rightcolumn" rows='4' cols='30'/></textarea>
+                </div>
+
+                <div id='tinyproxy_startservers_container'>
+		<label id='tinyproxy_startservers_label' class='leftcolumn'>Start Servers</label>
+                        <select class="rightcolumn" id="tinyproxy_startservers">
+                                <option value="1">1</option>
+                                <option value="2">2</option>
+				<option value="3">3</option>
+				<option value="4">4</option>
+				<option value="5">5</option>
+				<option value="6">6</option>
+				<option value="7">7</option>
+				<option value="8">8</option>
+				<option value="9">9</option>
+				<option value="10">10</option>
+                        </select>
+
+                </div>
+
 <!--
 		<div id='tinyproxy_transp_container'>
 		<label id="tinyproxy_transp_label" class="leftcolumn" for="tinyproxy_transp">Transparent proxy:</label>
@@ -56,9 +92,15 @@
 
                 </div>
 
+        <br />
+        <div>
+             <em>WARNING: Be careful with too large value of the Start Servers on routers with a small amount of RAM memory.
+             The default value is 10. The recommended process is 2-3.
+             Log Level: Critical (least verbose), Connect (log connections without Info's noise), Info (most verbose). 
+             Connect is recommended. </em>
+        </div>
 
 	</div>
-	
 
 <div id="bottom_button_container">
 	<input type='button' value='Save Changes' id="save_button" class="bottom_button" onclick='saveChanges()' />
