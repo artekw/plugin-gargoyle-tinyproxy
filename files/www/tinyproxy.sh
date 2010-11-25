@@ -12,8 +12,7 @@
    echo "var filterurl_file = new Array();"
    if [ -e /etc/tinyproxy/filter ]; then 
       cat /etc/tinyproxy/filter | awk '{print "filterurl_file.push([\""$1"\"]);"};'
-  fi	
-
+   fi
 
 ?>
 //-->
@@ -48,7 +47,7 @@
 		
 		<div id='tinyproxy_filterurledit_container'>
                         <label id="tinyproxy_filterurledit_label" class="leftcolumn" for="tinyproxy_filterurledit">Filter URL Content:</label>
-                        <textarea id="tinyproxy_filterurledit" class="rightcolumn" rows='4' cols='30'/></textarea>
+                        <textarea id="tinyproxy_filterurledit" class="nocolumn" rows='4' cols='30'/></textarea>
                 </div>
 
                 <div id='tinyproxy_startservers_container'>
@@ -88,10 +87,11 @@
 				<option value="Connect">Connect</option>
 				<option value="Info">Info</option>
                 </select>
+		</div>
 
-                </div>
-
-        <br />
+		<div class='rightcolum' style="margin-bottom:15px">
+			<input type='button' id="tinyproxy_logview_button" value="Show Log" class="default_button" onclick="showLog()" />
+		</div>
         <div>
              <em>WARNING: Be careful with too large value of the Start Servers on routers with a small amount of RAM memory.
              The default value is 10. The recommended process is 2-3.

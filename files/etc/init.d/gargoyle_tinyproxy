@@ -11,4 +11,16 @@ start()
                 uci set gargoyle.connection.tinyproxy='500'
                 uci commit gargoyle
         fi
+	add_include_file
+}
+
+add_include_file()
+{
+	include=$(uci get firewall.@include[2].path 2>/dev/null)
+	if [ -z "$include" ]; then
+		uci add firewall include > /dev/null
+		uci set firewall.@include[2]=include
+		uci set firewall.@include[2].path=/etc/tinyproxy.rule
+		uci commit firewall
+	fi
 }

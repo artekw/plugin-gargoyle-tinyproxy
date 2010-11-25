@@ -63,21 +63,24 @@ function saveChanges()
 	
 	if(transproxy == "1")
 	{
-		createTransparentProxy.push("echo \"" + TransparentRule + "\" >> /etc/firewall.user");
+		createTransparentProxy.push("echo \"" + TransparentRule + "\" > /etc/tinyproxy.rule");
 		preCommands.push("uci set tinyproxy.@tinyproxy[0].TransparentProxy=1");
 	}
 	else
 	{
-		createTransparentProxy.push("sed -i 's/"+ TransparentRule +"//g' /etc/firewall.user");
+		createTransparentProxy.push("sed -i 's/"+ TransparentRule +"//g' /etc/tinyproxy.rule");
 		preCommands.push("uci set tinyproxy.@tinyproxy[0].TransparentProxy=0");
 	}
+	
+	//create Log File
+	var createLogFile = [ "touch /var/log/tinyproxy.log", "chown nobody.nogroup /var/log/tinyproxy.log" ];
 	
 	preCommands.push("uci commit");
 
 	postCommands.push("/etc/init.d/tinyproxy restart");
 	postCommands.push("/etc/init.d/firewall restart");
 
-	var commands = createFilterCommands.join("\n") + "\n" + createTransparentProxy + "\n" + preCommands.join("\n") + "\n" +  uci.getScriptCommands(uciOriginal) + "\n" + postCommands.join("\n") + "\n";
+	var commands = createFilterCommands.join("\n") + "\n" + createTransparentProxy.join("\n") + "\n" + createLogFile.join("\n") + "\n" + preCommands.join("\n") + "\n" +  uci.getScriptCommands(uciOriginal) + "\n" + postCommands.join("\n") + "\n";
 	var param = getParameterDefinition("commands", commands) + "&" + getParameterDefinition("hash", document.cookie.replace(/^.*hash=/,"").replace(/[\t ;]+.*$/, ""));
 	
 	var stateChangeFunction = function(req)
@@ -101,6 +104,37 @@ function setVisibilityTinyproxy()
 function setVisibilityFilterURL()
 {
         setInvisibleIfIdMatches("tinyproxy_filterurl", ["Off"], "tinyproxy_filterurledit_container", "block", document);
+}
+
+function showLog()
+{
+
+if( typeof(viewLogWindow) != "undefined" )
+	{
+		//opera keeps object around after
+		//window is closed, so we need to deal
+		//with error condition
+		try
+		{
+			viewLogWindow.close();
+		}
+		catch(e){}
+	}
+
+	
+	try
+	{
+		xCoor = window.screenX + 225;
+		yCoor = window.screenY+ 225;
+	}
+	catch(e)
+	{
+		xCoor = window.left + 225;
+		yCoor = window.top + 125;
+	}
+
+	viewLogWindow = window.open("tinyproxy_view.sh", "Log", "width=800,height=600,left=" + xCoor + ",top=" + yCoor );
+
 }
 
 function resetData()
@@ -129,6 +163,7 @@ function resetData()
 	document.getElementById("tinyproxy_allowips").value = uciOriginal.get("tinyproxy", tpSections[0], "Allow");	
 
 	document.getElementById("tinyproxy_filterurledit").value = filterurl_file.join('\n');
+
 	setVisibilityTinyproxy();
 	setVisibilityFilterURL();
 }
