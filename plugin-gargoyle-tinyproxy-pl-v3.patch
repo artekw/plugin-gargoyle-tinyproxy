@@ -107,9 +107,9 @@ diff -urN plugin-gargoyle-tinyproxy-orig//files/www/tinyproxy.sh plugin-gargoyle
 -             The default value is 10. The recommended process is 2-3.
 -             Log Level: Critical (least verbose), Connect (log connections without Info's noise), Info (most verbose).</em>
 +             <em>UWAGA: Uważaj ze zbyt dużą ilością procesów programu na routerach z małą ilością pamięci RAM. Zalecane wartości to 
-+		2-3 procesy. Poziom logowania: Najmniej szczegółowym poziomem logowania jest 'Tylko krtyczne', najbardziej 
++		2-3 procesy. Poziom logowania: Najmniej szczegółowym poziomem logowania jest 'Tylko krytyczne', najbardziej 
 +		szczegółowym - 'Wszystko'. Wybierając poziom logowania 'Informacje programu', w logu znajdą się też 'Uwagi programu', 
-+		'Błędy programu' i 'Tylko krytyczne'. Poziom 'Nawiązane połączenia' zapisuje do pliku wszystkie nawiązane połączenie 
++		'Błędy programu' i 'Tylko krytyczne'. Poziom 'Nawiązane połączenia' zapisuje do pliku wszystkie nawiązane połączenia 
 +		przez maszyny działające za proxy.</em>
          </div>
  
