@@ -46,21 +46,10 @@ function saveChanges()
 
 	var postCommands = [];
 
-	if(enabled == "1")
-	{
-		preCommands.push("uci set tinyproxy.@tinyproxy[0].enable=1");
-		postCommands.push("/etc/init.d/tinyproxy enable");
-	}
-	if(enabled == "0")
-	{
-		preCommands.push("uci set tinyproxy.@tinyproxy[0].enable=0");
-		postCommands.push("/etc/init.d/tinyproxy disable");
-	}
-	
 	routerIP = uciOriginal.get("network", "lan", "ipaddr");
 	var TransparentRule = [ "iptables -t nat -A PREROUTING -i br-lan -p tcp ! -d " + routerIP  + " --dport 80 -j REDIRECT --to-port " + tinyproxyPort ];
-	var createTransparentProxy = [];
-	
+        var createTransparentProxy = [];
+
 	if(transproxy == "1")
 	{
 		createTransparentProxy.push("echo \"" + TransparentRule + "\" > /etc/tinyproxy.rule");
@@ -71,6 +60,19 @@ function saveChanges()
 		createTransparentProxy.push("sed -i 's/"+ TransparentRule +"//g' /etc/tinyproxy.rule");
 		preCommands.push("uci set tinyproxy.@tinyproxy[0].TransparentProxy=0");
 	}
+
+        if(enabled == "1")
+        {
+                preCommands.push("uci set tinyproxy.@tinyproxy[0].enable=1");
+                postCommands.push("/etc/init.d/tinyproxy enable");
+        }
+        if(enabled == "0")
+        {
+                createTransparentProxy.push("sed -i 's/"+ TransparentRule +"//g' /etc/tinyproxy.rule");
+                preCommands.push("uci set tinyproxy.@tinyproxy[0].enable=0");
+                postCommands.push("/etc/init.d/tinyproxy disable");
+        }
+
 	
 	//create Log File
 	var createLogFile = [ "touch /var/log/tinyproxy.log", "chown nobody.nogroup /var/log/tinyproxy.log" ];
