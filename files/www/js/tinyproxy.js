@@ -8,7 +8,7 @@ function saveChanges()
 	var loglevel = getSelectedValue("tinyproxy_loglevel");
 	var startservers = getSelectedValue("tinyproxy_startservers");
 	var tinyproxyPort = document.getElementById("tinyproxy_port").value;
-//	var allowips = document.getElementById("tinyproxy_allowips").value;
+	var allowips = document.getElementById("tinyproxy_allowips").value;
 	var allowips_custom = document.getElementById("tinyproxy_allowipsedit").value;
 	var allowips_option = getSelectedValue("tinyproxy_allowips").value;
 	var transproxy = getSelectedValue("tinyproxy_transparent");
@@ -66,13 +66,13 @@ function saveChanges()
 
     if(enabled == "1")
     {
-		preCommands.push("uci set tinyproxy.@tinyproxy[0].enable=1");
+		preCommands.push("uci set tinyproxy.@tinyproxy[0].enabled=1");
 		postCommands.push("/etc/init.d/tinyproxy enable");
     }
     if(enabled == "0")
     {
 		createFirewallRule.push("sed -i 's/"+ TransparentRule +"//g' /etc/tinyproxy.rule");
-		preCommands.push("uci set tinyproxy.@tinyproxy[0].enable=0");
+		preCommands.push("uci set tinyproxy.@tinyproxy[0].enabled=0");
 		postCommands.push("/etc/init.d/tinyproxy disable");
     }
 
@@ -171,7 +171,7 @@ function resetData()
 		
 	document.getElementById("tinyproxy_port").value = uciOriginal.get("tinyproxy", tpSections[0], "Port");
 	document.getElementById("tinyproxy_loglevel").value = uciOriginal.get("tinyproxy", tpSections[0], "LogLevel");
-	document.getElementById("tinyproxy_allowips").value = uciOriginal.get("tinyproxy", tpSections[0], "Allow");	
+	document.getElementById("tinyproxy_allowipedit").value = uciOriginal.get("tinyproxy", tpSections[0], "Allow");	
 
 	document.getElementById("tinyproxy_filterurledit").value = filterurl_file.join('\n');
 
