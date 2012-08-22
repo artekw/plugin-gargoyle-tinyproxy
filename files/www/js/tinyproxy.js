@@ -1,5 +1,5 @@
 /*	
- * Copyright (c) 2010 Artur Wronowski <arteqw@gmail.com>
+ * Copyright (c) 2010-2011 Artur Wronowski <arteqw@gmail.com>
  */
 
 function saveChanges()
@@ -8,7 +8,9 @@ function saveChanges()
 	var loglevel = getSelectedValue("tinyproxy_loglevel");
 	var startservers = getSelectedValue("tinyproxy_startservers");
 	var tinyproxyPort = document.getElementById("tinyproxy_port").value;
-	var allowips = document.getElementById("tinyproxy_allowips").value;
+//	var allowips = document.getElementById("tinyproxy_allowips").value;
+	var allowips_custom = document.getElementById("tinyproxy_allowipsedit").value;
+	var allowips_option = getSelectedValue("tinyproxy_allowips").value;
 	var transproxy = getSelectedValue("tinyproxy_transparent");
 	var filterurl = getSelectedValue("tinyproxy_filterurl");
 	
@@ -18,11 +20,11 @@ function saveChanges()
 	var errors = [];
 	if (tinyproxyPort == "")
 	{
-		errors.push("Enter tinyproxy port");
+		errors.push("Wpisz port tinyproxy");
 	}
 	if (errors.length > 0)
 	{
-		alert( errors.join("\n") + "\n\nCould not save settings" );
+		alert( errors.join("\n") + "\n\nNie można zapisać ustawień" );
 		return;
 	}
 	
@@ -31,7 +33,7 @@ function saveChanges()
 	var uci = uciOriginal.clone();
 	
 	var preCommands = [];
-		
+	
 	preCommands.push("uci set tinyproxy.@tinyproxy[0].Listen=0.0.0.0");
 	preCommands.push("uci set tinyproxy.@tinyproxy[0].Port='" + tinyproxyPort + "'");
 	preCommands.push("uci set tinyproxy.@tinyproxy[0].LogLevel='" + loglevel + "'");
@@ -48,30 +50,31 @@ function saveChanges()
 
 	routerIP = uciOriginal.get("network", "lan", "ipaddr");
 	var TransparentRule = [ "iptables -t nat -A PREROUTING -i br-lan -p tcp ! -d " + routerIP  + " --dport 80 -j REDIRECT --to-port " + tinyproxyPort ];
-        var createTransparentProxy = [];
+	var SingleIPRule = [ "iptables -t nat -I PREROUTING czes-s " + allowips  + " -p tcp --dport 80 -j REDIRECT --to-port " + tinyproxyPort ];
+    var createFirewallRule = [];
 
 	if(transproxy == "1")
 	{
-		createTransparentProxy.push("echo \"" + TransparentRule + "\" > /etc/tinyproxy.rule");
+		createFirewallRule.push("echo \"" + TransparentRule + "\" > /etc/tinyproxy.rule");
 		preCommands.push("uci set tinyproxy.@tinyproxy[0].TransparentProxy=1");
 	}
 	else
 	{
-		createTransparentProxy.push("sed -i 's/"+ TransparentRule +"//g' /etc/tinyproxy.rule");
+		createFirewallRule.push("sed -i 's/"+ TransparentRule +"//g' /etc/tinyproxy.rule");
 		preCommands.push("uci set tinyproxy.@tinyproxy[0].TransparentProxy=0");
 	}
 
-        if(enabled == "1")
-        {
-                preCommands.push("uci set tinyproxy.@tinyproxy[0].enable=1");
-                postCommands.push("/etc/init.d/tinyproxy enable");
-        }
-        if(enabled == "0")
-        {
-                createTransparentProxy.push("sed -i 's/"+ TransparentRule +"//g' /etc/tinyproxy.rule");
-                preCommands.push("uci set tinyproxy.@tinyproxy[0].enable=0");
-                postCommands.push("/etc/init.d/tinyproxy disable");
-        }
+    if(enabled == "1")
+    {
+		preCommands.push("uci set tinyproxy.@tinyproxy[0].enable=1");
+		postCommands.push("/etc/init.d/tinyproxy enable");
+    }
+    if(enabled == "0")
+    {
+		createFirewallRule.push("sed -i 's/"+ TransparentRule +"//g' /etc/tinyproxy.rule");
+		preCommands.push("uci set tinyproxy.@tinyproxy[0].enable=0");
+		postCommands.push("/etc/init.d/tinyproxy disable");
+    }
 
 	
 	//create Log File
@@ -82,7 +85,7 @@ function saveChanges()
 	postCommands.push("/etc/init.d/tinyproxy restart");
 	postCommands.push("/etc/init.d/firewall restart");
 
-	var commands = createFilterCommands.join("\n") + "\n" + createTransparentProxy.join("\n") + "\n" + createLogFile.join("\n") + "\n" + preCommands.join("\n") + "\n" +  uci.getScriptCommands(uciOriginal) + "\n" + postCommands.join("\n") + "\n";
+	var commands = createFilterCommands.join("\n") + "\n" + createFirewallRule.join("\n") + "\n" + createLogFile.join("\n") + "\n" + preCommands.join("\n") + "\n" +  uci.getScriptCommands(uciOriginal) + "\n" + postCommands.join("\n") + "\n";
 	var param = getParameterDefinition("commands", commands) + "&" + getParameterDefinition("hash", document.cookie.replace(/^.*hash=/,"").replace(/[\t ;]+.*$/, ""));
 	
 	var stateChangeFunction = function(req)
@@ -106,6 +109,11 @@ function setVisibilityTinyproxy()
 function setVisibilityFilterURL()
 {
         setInvisibleIfIdMatches("tinyproxy_filterurl", ["Off"], "tinyproxy_filterurledit_container", "block", document);
+}
+
+function setVisibilityAllowIP()
+{
+        setInvisibleIfIdMatches("tinyproxy_allowips", ["all"], "tinyproxy_allowipedit_container", "block", document);
 }
 
 function showLog()
@@ -145,6 +153,7 @@ function resetData()
 	//FilterURL disable by default
 	setSelectedValue("tinyproxy_filterurl", "Off", document);
 	setSelectedValue("tinyproxy_transparent", "0", document);
+	setSelectedValue("tinyproxy_allowips", "all", document);
 	
 	var tpSections = uciOriginal.getAllSectionsOfType("tinyproxy", "tinyproxy");
 
@@ -162,11 +171,12 @@ function resetData()
 		
 	document.getElementById("tinyproxy_port").value = uciOriginal.get("tinyproxy", tpSections[0], "Port");
 	document.getElementById("tinyproxy_loglevel").value = uciOriginal.get("tinyproxy", tpSections[0], "LogLevel");
-	document.getElementById("tinyproxy_allowips").value = uciOriginal.get("tinyproxy", tpSections[0], "Allow");	
+	document.getElementById("tinyproxy_allowipedit").value = uciOriginal.get("tinyproxy", tpSections[0], "Allow");	
 
 	document.getElementById("tinyproxy_filterurledit").value = filterurl_file.join('\n');
 
 	setVisibilityTinyproxy();
 	setVisibilityFilterURL();
+	setVisibilityAllowIP();
 }
 
