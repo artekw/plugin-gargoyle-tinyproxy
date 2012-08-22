@@ -99,7 +99,6 @@
         </div>
 
 	</div>
-
 </fieldset>
 
 <div id="bottom_button_container">
