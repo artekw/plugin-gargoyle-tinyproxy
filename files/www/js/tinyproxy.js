@@ -171,7 +171,7 @@ function resetData()
 		
 	document.getElementById("tinyproxy_port").value = uciOriginal.get("tinyproxy", tpSections[0], "Port");
 	document.getElementById("tinyproxy_loglevel").value = uciOriginal.get("tinyproxy", tpSections[0], "LogLevel");
-	document.getElementById("tinyproxy_allowipedit").value = uciOriginal.get("tinyproxy", tpSections[0], "Allow");	
+	document.getElementById("tinyproxy_allowips").value = uciOriginal.get("tinyproxy", tpSections[0], "Allow");	
 
 	document.getElementById("tinyproxy_filterurledit").value = filterurl_file.join('\n');
 
