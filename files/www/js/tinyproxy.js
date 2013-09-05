@@ -28,7 +28,7 @@ function saveChanges()
 		return;
 	}
 
-	setControlsenable(false, true);
+	setControlsEnabled(false, true);
 
 	var uci = uciOriginal.clone();
 
@@ -93,7 +93,7 @@ function saveChanges()
 		if(req.readyState == 4)
 		{
 			uciOriginal = uci.clone();
-			setControlsenable(true);
+			setControlsEnabled(true);
 		}
 	}
 
