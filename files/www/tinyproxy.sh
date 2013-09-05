@@ -1,6 +1,6 @@
 #!/usr/bin/haserl
 <?
-	# Copyright (c)  2010-2011 Artur Wronowski <arteqw@gmail.com> 
+	# Copyright (c)  2010-2011 Artur Wronowski <arteqw@gmail.com>
 	eval $( gargoyle_session_validator -c "$COOKIE_hash" -e "$COOKIE_exp" -a "$HTTP_USER_AGENT" -i "$REMOTE_ADDR" -r "login.sh" -t $(uci get gargoyle.global.session_timeout) -b "$COOKIE_browser_time"  )
 	gargoyle_header_footer -h -s "connection" -p "tinyproxy" -c "internal.css" -j "tinyproxy.js" tinyproxy network
 ?>
@@ -10,7 +10,7 @@
 <?
 
    echo "var filterurl_file = new Array();"
-   if [ -e /etc/tinyproxy/filter ]; then 
+   if [ -e /etc/tinyproxy/filter ]; then
       cat /etc/tinyproxy/filter | awk '{print "filterurl_file.push([\""$1"\"]);"};'
    fi
 
@@ -20,9 +20,9 @@
 
 <fieldset id="tinyproxy">
 	<legend class="sectionheader">Tinyproxy</legend>
-		<div id='tinyproxy_enabled_container' class='rightcolumn'>
-		<label id='tinyproxy_enabled_label' class='leftcolumn'>Tinyproxy</label>
-			<select class="rightcolumn" id="tinyproxy_enabled" onchange="setVisibilityTinyproxy()">
+		<div id='tinyproxy_enable_container' class='rightcolumn'>
+		<label id='tinyproxy_enable_label' class='leftcolumn'>Tinyproxy</label>
+			<select class="rightcolumn" id="tinyproxy_enable" onchange="setVisibilityTinyproxy()">
 				<option value="1">Włączone</option>
 				<option value="0">Wyłączone</option>
 			</select>
@@ -36,7 +36,7 @@
                                 <option value="0">Wyłączone</option>
               </select>
 		</div>
-		
+
         <div id='tinyproxy_filterurl_container' class='rightcolumn'>
             <label id='tinyproxy_filterurl_label' class='leftcolumn'>Filtrowanie treści:</label>
                <select class="rightcolumn" id="tinyproxy_filterurl" onchange="setVisibilityFilterURL()">
@@ -44,7 +44,7 @@
                                 <option value="Off">Wyłączone</option>
                </select>
         </div>
-		
+
 		<div id='tinyproxy_filterurledit_container'>
                         <label id="tinyproxy_filterurledit_label" class="leftcolumn" for="tinyproxy_filterurledit">Zawartość filtra:</label>
                         <textarea id="tinyproxy_filterurledit" class="nocolumn" rows='4' cols='30'/></textarea>
@@ -79,10 +79,10 @@
 								<option value="custom">Własne</option>
 							</select>
 				</div>
-				
+
 				<div id='tinyproxy_allowipedit_container'>
                         <label id="tinyproxy_allowipedit_label" class="leftcolumn" for="tinyproxy_allowipdit">Własne IP:</label>
-                        <input id="tinyproxy_allowipedit" class="nocolumn" type="text" size='17'/>         
+                        <input id="tinyproxy_allowipedit" class="nocolumn" type="text" size='17'/>
                 </div>
 
 		<div id='tinyproxy_loglevel_container'>
@@ -101,10 +101,10 @@
 			<input type='button' id="tinyproxy_logview_button" value="Pokaż log" class="default_button" onclick="showLog()" />
 		</div>
         <div>
-             <em>UWAGA: Uważaj ze zbyt dużą ilością procesów programu na routerach z małą ilością pamięci RAM. Zalecane wartości to 
-		2-3 procesy. Poziom logowania: Najmniej szczegółowym poziomem logowania jest 'Tylko krytyczne', najbardziej 
-		szczegółowym - 'Wszystko'. Wybierając poziom logowania 'Informacje programu', w logu znajdą się też 'Uwagi programu', 
-		'Błędy programu' i 'Tylko krytyczne'. Poziom 'Nawiązane połączenia' zapisuje do pliku wszystkie nawiązane połączenia 
+             <em>UWAGA: Uważaj ze zbyt dużą ilością procesów programu na routerach z małą ilością pamięci RAM. Zalecane wartości to
+		2-3 procesy. Poziom logowania: Najmniej szczegółowym poziomem logowania jest 'Tylko krytyczne', najbardziej
+		szczegółowym - 'Wszystko'. Wybierając poziom logowania 'Informacje programu', w logu znajdą się też 'Uwagi programu',
+		'Błędy programu' i 'Tylko krytyczne'. Poziom 'Nawiązane połączenia' zapisuje do pliku wszystkie nawiązane połączenia
 		przez maszyny działające za proxy.</em>
         </div>
 
