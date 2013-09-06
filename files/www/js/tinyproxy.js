@@ -18,7 +18,7 @@ function saveChanges()
 	var filter_file = document.getElementById("tinyproxy_filterurledit").value.split('\n');
 
 	var errors = [];
-	if (tinyproxyPort == "")
+	if (tinyproxyPort == "" || tinyproxyPort == "0")
 	{
 		errors.push("Wpisz port tinyproxy");
 	}
